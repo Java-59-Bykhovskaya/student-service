@@ -1,59 +1,71 @@
-import * as repo from '../repository/studentRepository.js';
+import * as service from '../services/studentService.js';
+import {
+  scoreSchema,
+  studentSchema,
+  updateStudentSchema
+} from '../validator/studentValidator.js';
 
 export const addStudent = async (req, res) => {
-  const success = await repo.addStudent(req.body);
-  if (success) {
-    res.status(204).send();
-  } else {
-    res.status(409).send();
-  }
+  const { error } = studentSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
+  const success = await service.addStudent(req.body);
+  res.sendStatus(success ? 201 : 409);
 };
 
 export const findStudentByID = async (req, res) => {
-  const student = await repo.findStudent(+req.params.id);
+  const student = await service.findStudent(+req.params.id);
   if (student) {
     const tmp = { ...student };
-    delete tmp.password;
+    console.log(tmp);
+    tmp.password = undefined;
     res.json(tmp);
   } else {
-    res.status(404).send();
+    res.sendStatus(404);
   }
 };
 
 export const deleteStudent = async (req, res) => {
-  const student = await repo.deleteStudent(+req.params.id);
+  const student = await service.deleteStudent(+req.params.id);
   if (student) {
-    delete student.password;
+    student.password = undefined;
     res.json(student);
   } else {
-    res.status(404).send();
+    res.sendStatus(404);
   }
 };
 
 export const updateStudent = async (req, res) => {
-  const student = await repo.updateStudent(+req.params.id, req.body);
+  const { error } = updateStudentSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
+  const student = await service.updateStudent(+req.params.id, req.body);
   if (student) {
     const tmp = { ...student };
     delete tmp.scores;
     res.json(tmp);
   } else {
-    res.status(404).send();
+    res.sendStatus(404);
   }
 };
 
 export const addScore = async (req, res) => {
-  const student = await repo.addScore(+req.params.id, req.body);
-  if (student) {
-    const tmp = { ...student };
-    delete tmp.password;
-    res.json(tmp);
-  } else {
-    res.status(404).send();
-  }
+  const { error } = scoreSchema.validate(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
+  const student = await service.addScore(+req.params.id, req.body.name, +req.body.score);
+  res.sendStatus(student ? 204 : 409);
+  // if (student) {
+  //   const tmp = { ...student };
+  //   delete tmp.password;
+  //   res.json(tmp);
+  // } else {
+  //   res.sendStatus(404);
+  // }
 };
 
 export const findStudentByName = async (req, res) => {
-  const students = await repo.findStudentByName(req.params.name);
+  const students = await service.findStudentByName(req.params.name);
   await students.map((student) => {delete student.password;});
   res.json(students);
 };

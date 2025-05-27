@@ -1,57 +1,53 @@
-let collection;
+import Student from '../model/student.js';
 
-export function init (db) {
-  collection = db.collection('college');
+
+export async function createStudent (student) {
+  return Student.create(student);
 }
 
-export const addStudent = async ({ id, name, password }) => {
-  const exists = await collection.findOne({ _id: { id } });
-  if (exists) {
-    return false;
-  }
-  await collection.insertOne({ _id: id, name, password, scores: {} });
-  return true;
-};
+export async function findStudentById (id) {
+  return Student.findById(id);
+}
 
 
-export const findStudent = async (id) => {
-  return await collection.findOne({ _id: id });
-};
+export async function deleteStudent (id) {
+  return Student.findByIdAndDelete(id);
 
-export const deleteStudent = async (id) => {
-  return await collection.findOneAndDelete({ _id: id });
+}
 
-};
+export async function updateStudent (id, data) {
+  return Student.findByIdAndUpdate(id, data, { new: true });
+}
 
-export const updateStudent = async (id, data) => {
-  return collection.findOneAndUpdate({ _id: id }, { $set: data }, { returnDocument: 'after' });
-};
+export async function updateStudentScores (id, exam, score) {
+  return Student.findByIdAndUpdate(id, { [`scores${exam}`]: score }, { new: true });
+}
 
-export const addScore = async (id, { examName, score }) => {
-  const student = await collection.findOneAndUpdate({ _id: id }, { $set: { [`scores.${examName}`]: score } }, { returnDocument: 'after' });
-  if (student) {
-    student.scores[examName] = score;
-    return student;
-  }
-};
+export async function findStudentsByName (name) {
+  return Student.find({ name: new RegExp(`^${name}$`, 'i') });
+}
 
-export const findStudentByName = async (name) => {
-  return await collection.find({
-    name: {
-      $regex: `${name}`,
-      $options: 'i'
-    }
-  }).toArray();
+// export async function countStudentsByName (names) {
+//   return Student.countDocuments({});
+// }
 
-  // const res = [];
-  // for (const id of students.keys()) {
-  //   const student = students.get(id);
-  //   if (student.name.toLowerCase() === name.toLowerCase()) {
-  //     res.push(student);
-  //   }
-  // }
-  // return res;
-};
+// export const findStudentByName = async (name) => {
+//   return await collection.find({
+//     name: {
+//       $regex: `${name}`,
+//       $options: 'i'
+//     }
+//   }).toArray();
+
+// const res = [];
+// for (const id of students.keys()) {
+//   const student = students.get(id);
+//   if (student.name.toLowerCase() === name.toLowerCase()) {
+//     res.push(student);
+//   }
+// }
+// return res;
+// };
 
 // export const countByNames = (names) => {
 //   if (!Array.isArray(names)) findStudentByName(names).length;
