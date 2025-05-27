@@ -5,7 +5,8 @@ dotenv.config();
 
 
 const dbName = 'java59';
-const client = new MongoClient(process.env.MONGO_URI);
+const client = new MongoClient(process.env.MONGODB_URI);
+// const client = new MongoClient(process.env.MONGO_URI);
 let collection;
 
 export async function connect () {
