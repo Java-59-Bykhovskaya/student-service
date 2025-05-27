@@ -53,21 +53,19 @@ export const addScore = (req, res) => {
 };
 
 export const findStudentByName = (req, res) => {
-  const students = repo.findStudentByName(req.params.name);
+  const students = repo.findStudentsByName(req.params.name);
   res.json(students);
 
 };
 
 export const countByNames = (req, res) => {
-  const quantity = repo.countByNames(req.query.names);
-  if (quantity) {
-    res.json(quantity);
-  } else {
-    res.status(404).send();
-  }
+  const names = req.query.names;
+  const list = Array.isArray(names) ? names : [names];
+  const count = repo.countByNames(list);
+  res.json(count);
 };
 
-export const findStudentByMinScore = (req, res) => {
-  const student = findStudentByMinScore(req.params.exam, +req.params.minscore);
-  if (student) {}
+export const findByMinScore = (req, res) => {
+  const students = repo.findByMinScore(req.params.exam, +req.params.minScore);
+  res.json(students);
 };

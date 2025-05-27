@@ -36,33 +36,15 @@ export const addScore = (id, { examName, score }) => {
   }
 };
 
-export const findStudentByName = (name) => {
-  const res = [];
-  for (const id of students.keys()) {
-    const student = students.get(id);
-    if (student.name.toLowerCase() === name.toLowerCase()) {
-      res.push(student);
-    }
-  }
-  return res;
+export const findStudentsByName = (name) => {
+  return Array.from(students.values()).filter(s => s.name.toLowerCase() === name.toLowerCase());
 };
 
 export const countByNames = (names) => {
-  if (!Array.isArray(names)) findStudentByName(names).length;
-  else {
-    let count = 0;
-    names.forEach(name => {
-      for (const id of students.keys()) {
-        const student = students.get(id);
-        if (student.name.toLowerCase() === name.toLowerCase()) {
-          count++;
-        }
-      }
-    });
-    return count;
-  }
+  names = names.map(name => name.toLowerCase());
+  return Array.from(students.values()).filter(s => names.includes(s.name.toLowerCase())).length;
 };
 
-export const findStudentByMinScore = (exam, minScore) => {
-
+export const findByMinScore = (exam, minScore) => {
+  return Array.from(students.values()).filter(s => s.scores[exam] >= minScore);
 };
