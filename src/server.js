@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 const port = 8080;
 const dbName = 'java59';
-const client = new MongoClient(process.env.MONGO_URI);
+const client = new MongoClient(process.env.MONGODB_URI);
 
 app.use(express.json());
 app.use(studentRoutes);

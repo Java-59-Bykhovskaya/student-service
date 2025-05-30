@@ -42,33 +42,22 @@ export const findStudentByName = async (name) => {
       $options: 'i'
     }
   }).toArray();
-
-  // const res = [];
-  // for (const id of students.keys()) {
-  //   const student = students.get(id);
-  //   if (student.name.toLowerCase() === name.toLowerCase()) {
-  //     res.push(student);
-  //   }
-  // }
-  // return res;
 };
 
-// export const countByNames = (names) => {
-//   if (!Array.isArray(names)) findStudentByName(names).length;
-//   else {
-//     let count = 0;
-//     names.forEach(name => {
-//       for (const id of students.keys()) {
-//         const student = students.get(id);
-//         if (student.name.toLowerCase() === name.toLowerCase()) {
-//           count++;
-//         }
-//       }
-//     });
-//     return count;
-//   }
-// };
-//
-// export const findStudentByMinScore = (exam, minScore) => {
-//
-// };
+
+export const countByNames = async (names) => {
+  await connect();
+  if (typeof names === 'string') names = [names];
+  const regexNames = names.map(name => new RegExp(`^${name}$`, 'i'));
+  return await collection.countDocuments({
+    name: {
+      $in: regexNames
+    }
+  });
+};
+
+export const findByMinScore = async (exam, minScore) => {
+  return await collection.find({
+    [`scores.${exam}`]: { $gte: minScore }
+  }).toArray();
+};

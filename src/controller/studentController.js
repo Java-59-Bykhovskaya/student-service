@@ -58,16 +58,21 @@ export const findStudentByName = async (req, res) => {
   res.json(students);
 };
 
-// export const countByNames = (req, res) => {
-//   const quantity = repo.countByNames(req.query.names);
-//   if (quantity) {
-//     res.json(quantity);
-//   } else {
-//     res.status(404).send();
-//   }
-// };
-//
-// export const findStudentByMinScore = (req, res) => {
-//   const student = findStudentByMinScore(req.params.exam, +req.params.minscore);
-//   if (student) {}
-// };
+
+export const countByNames = async (req, res) => {
+  const quantity = await repo.countByNames(req.query.names);
+  if (quantity) {
+    res.json(quantity);
+  } else {
+    res.status(404).send();
+  }
+};
+
+export const findStudentByMinScore = (req, res) => {
+  const student = findStudentByMinScore(req.params.exam, +req.params.minscore);
+  if (student) {
+    res.json(student);
+  } else {
+    res.sentStatus(409);
+  }
+};
