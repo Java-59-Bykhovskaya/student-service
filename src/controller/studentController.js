@@ -68,8 +68,8 @@ export const countByNames = async (req, res) => {
   }
 };
 
-export const findStudentByMinScore = (req, res) => {
-  const student = findStudentByMinScore(req.params.exam, +req.params.minscore);
+export const findStudentByMinScore = async (req, res) => {
+  const student = await repo.findByMinScore(req.params.exam, +req.params.minscore);
   if (student) {
     res.json(student);
   } else {

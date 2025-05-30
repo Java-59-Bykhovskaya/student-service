@@ -46,7 +46,6 @@ export const findStudentByName = async (name) => {
 
 
 export const countByNames = async (names) => {
-  await connect();
   if (typeof names === 'string') names = [names];
   const regexNames = names.map(name => new RegExp(`^${name}$`, 'i'));
   return await collection.countDocuments({
