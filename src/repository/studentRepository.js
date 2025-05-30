@@ -51,8 +51,6 @@ export const addScore = async (id, { examName, score }) => {
 
 export const findStudentByName = async (name) => {
   await connect();
-
-
   return await collection.find({
     name: {
       $regqx: `${name}`,
@@ -74,7 +72,13 @@ export const countByNames = async (names) => {
 };
 
 export const findByMinScore = async (exam, minScore) => {
+  await connect();
   return await collection.find({
-    [`score.${exam}`]: { $gte: minScore }
+    [`scores.${exam}`]: { $gte: minScore }
   }).toArray();
 };
+
+
+// export const findByMinScore = async (exam, minScore) => {
+//   return await collection.find({ [`scores.${exam}`]: { $gte: minScore } }).toArray();
+// };
