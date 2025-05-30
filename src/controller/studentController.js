@@ -12,9 +12,8 @@ export const addStudent = async (req, res) => {
 export const findStudentByID = async (req, res) => {
   const student = await repo.findStudent(+req.params.id);
   if (student) {
-    const tmp = { ...student };
-    delete tmp.password;
-    res.json(tmp);
+    delete student.password;
+    res.json(student);
   } else {
     res.status(404).send();
   }
@@ -33,9 +32,8 @@ export const deleteStudent = async (req, res) => {
 export const updateStudent = async (req, res) => {
   const student = await repo.updateStudent(+req.params.id, req.body);
   if (student) {
-    const tmp = { ...student };
-    delete tmp.scores;
-    res.json(tmp);
+    delete student.scores;
+    res.json(student);
   } else {
     res.status(404).send();
   }
@@ -44,9 +42,8 @@ export const updateStudent = async (req, res) => {
 export const addScore = async (req, res) => {
   const student = await repo.addScore(+req.params.id, req.body);
   if (student) {
-    const tmp = { ...student };
-    delete tmp.password;
-    res.json(tmp);
+    student.password;
+    res.json(student);
   } else {
     res.status(404).send();
   }
@@ -58,16 +55,20 @@ export const findStudentByName = async (req, res) => {
   res.json(students);
 };
 
-// export const countByNames = (req, res) => {
-//   const quantity = repo.countByNames(req.query.names);
-//   if (quantity) {
-//     res.json(quantity);
-//   } else {
-//     res.status(404).send();
-//   }
-// };
-//
-// export const findStudentByMinScore = (req, res) => {
-//   const student = findStudentByMinScore(req.params.exam, +req.params.minscore);
-//   if (student) {}
-// };
+export const countByNames = async (req, res) => {
+  const quantity = await repo.countByNames(req.query.names);
+  if (quantity) {
+    res.json(quantity);
+  } else {
+    res.status(404).send();
+  }
+};
+
+export const findStudentByMinScore = (req, res) => {
+  const student = findStudentByMinScore(req.params.exam, +req.params.minscore);
+  if (student) {
+    res.json(student);
+  } else {
+    res.sentStatus(409);
+  }
+};

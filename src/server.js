@@ -7,6 +7,15 @@ const port = 8080;
 
 app.use(express.json());
 app.use(studentRoutes);
+// app.use((req, res) => {
+//   if (Array.isArray(res.body)) {
+//     res.body = res.body.map(item => {
+//       const { _id, ...rest } = item;
+//       return { id: _id, ...rest };
+//     });
+//   }
+//   next();
+// });
 app.use((req, res) => {
   res.status(404).type('text/plain').send('Not Found');
 });
